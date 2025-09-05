@@ -4,6 +4,10 @@
 
 - Live site: [solana-pay-dapp.vercel.app](https://solana-pay-dapp.vercel.app/)
 
+## Presentation
+
+- Slides: [Solana Pay + Transaction Logging](https://docs.google.com/presentation/d/1s7VqpGtkoRDcS86EXNfCYOKrHDW26FbeaALOOLL5ilU/edit?slide=id.g377deacc26f_0_0#slide=id.g377deacc26f_0_0)
+
 Add the Solana Pay SDK to your project:
 
 ```bash

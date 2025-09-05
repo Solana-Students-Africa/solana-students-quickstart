@@ -76,4 +76,5 @@ npm run dev
 References:
 - HTML demo: [vanilla-js-solana-pay-scafford.vercel.app](https://vanilla-js-solana-pay-scafford.vercel.app/)
 - Next.js demo: [solana-pay-dapp.vercel.app](https://solana-pay-dapp.vercel.app/)
+ - Presentation: [Solana Pay + Transaction Logging](https://docs.google.com/presentation/d/1s7VqpGtkoRDcS86EXNfCYOKrHDW26FbeaALOOLL5ilU/edit?slide=id.g377deacc26f_0_0#slide=id.g377deacc26f_0_0)
 
