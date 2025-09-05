@@ -67,3 +67,7 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Resources
+
+- QuickNode guide: [What is Solana Pay and How to Use It](https://www.quicknode.com/guides/solana-development/solana-pay/getting-started-with-solana-pay)

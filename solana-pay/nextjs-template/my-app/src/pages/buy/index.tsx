@@ -1,5 +1,15 @@
 "use client";
 
+
+/**
+ * Buy Page
+ * Renders a small catalog and powers a Solana Pay flow:
+ * - Builds a Solana Pay URL for the selected product
+ * - Renders a branded QR code on the client
+ * - Polls for a transaction that references a unique public key
+ * - Validates the payment (recipient + amount) before confirming
+ */
+
 import React, { useEffect, useState } from "react";
 import {  encodeURL, TransferRequestURLFields, findReference, validateTransfer } from "@solana/pay";
 import { Connection, PublicKey, Keypair } from "@solana/web3.js";
@@ -7,6 +17,10 @@ import BigNumber from "bignumber.js";
 import { FaOpencart } from "react-icons/fa";
 import Link from "next/link";
 
+
+/**
+ * Product shown in the catalog and used to construct payment details.
+ */
 interface Product {
   name: string;
   price: number;
@@ -14,15 +28,21 @@ interface Product {
   imageUrl: string;
 }
 
+/**
+ * Type shape for the lazily imported `qr-code-styling` constructor.
+ * We only need the `append` method here to render the QR into the DOM.
+ */
 type QRCodeStylingType = new (options: any) => {
   append: (element: HTMLElement) => void;
 };
 
+// Demo products. In a real app you might fetch these from an API or CMS.
 const staticProducts: Product[] = [
   { name: "LS Serum", price: 0.2, quantity: 2, imageUrl: "./images/img1.jpg" },
   { name: "SkinCare", price: 0.3, quantity: 2, imageUrl: "/images/img2.jpg" },
 ];
 
+// RPC connection (devnet by default). Swap to mainnet RPC for production.
 const connection = new Connection("https://api.devnet.solana.com", "confirmed");
 
 export default function Buy() {
@@ -34,6 +54,7 @@ export default function Buy() {
   const [QRCodeStylingComponent, setQRCodeStylingComponent] =
     useState<QRCodeStylingType | null>(null);
 
+  // Load any user-added products from localStorage and combine with the demo list.
   useEffect(() => {
     // Get the products from local storage
     const storedProducts = JSON.parse(localStorage.getItem("products") || "[]");
@@ -41,12 +62,14 @@ export default function Buy() {
     setProducts([...staticProducts, ...storedProducts]);
   }, []);
 
+  // Lazy-load the QR code renderer only on the client (avoids SSR issues).
   useEffect(() => {
     import("qr-code-styling").then((module) => {
       setQRCodeStylingComponent(() => module.default as QRCodeStylingType);
     });
   }, []); // Added closing bracket here for the useEffect
 
+  // Select a product and reset any previous payment state.
   const handleProductSelection = (product: Product) => {
     setSelectedProduct(product);
     // Reset payment states when a new product is selected
@@ -55,16 +78,20 @@ export default function Buy() {
     setLoading(false);
   };
 
+  /**
+   * Poll the chain for a transaction that references our unique `reference` key,
+   * then validate that it matches the expected `recipient` and `amount`.
+   */
   const verifyPayment = async (recipient: PublicKey, amount: BigNumber, reference: PublicKey) => {
     try {
       const interval = setInterval(async () => {
         try {
-          // Search for a transaction with the reference
+          // Search for any transaction that includes our unique reference
           const foundTransaction = await findReference(connection, reference);
           if (foundTransaction.signature) {
             clearInterval(interval); // Stop polling
 
-            // Validate the transaction to ensure the correct recipient and amount
+            // Validate success AND expected recipient/amount before confirming
             const result = await validateTransfer(
               connection,
               foundTransaction.signature,
@@ -91,6 +118,10 @@ export default function Buy() {
     }
   };
 
+  /**
+   * Build a Solana Pay URL from the selected product and render a branded QR.
+   * A fresh `reference` key is generated per request so we can locate the payment on-chain.
+   */
   const handlePayment = async (product: Product) => {
     setLoading(true);
     const recipient = new PublicKey("54Xh2zCzKxLUtXmNrUJwMx54c4KDdqiQcWrye4NHYPkK");
@@ -115,6 +146,7 @@ export default function Buy() {
         height: 300,
         type: "svg",
         data: url.href,
+        // Style the dots and embed a small logo for branding
         dotsOptions: {
           color: "#000000",
           type: "extra-rounded",
@@ -132,6 +164,7 @@ export default function Buy() {
 
     //   const qr = createQR(url.toString(), 400, "transparent");
 
+      // Mount the QR into its container in the modal
       const qrCodeContainer = document.getElementById("qr-code-container");
       if (qrCodeContainer) {
         qrCodeContainer.innerHTML = "";
@@ -181,6 +214,7 @@ export default function Buy() {
       </ul>
 
       {selectedProduct && (
+        // Full-screen modal with semi-transparent backdrop to focus the QR flow
         <div className="fixed bottom-0 left-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-[#251206]  fixed bottom-0 w-screen h-[90%] rounded-lg shadow-lg p-8 overflow-auto">
             <button
@@ -213,6 +247,7 @@ export default function Buy() {
                 <p className="text-lg text-gray-600 mb-4">
                   Quantity: {selectedProduct.quantity}
                 </p>
+                {/* QR mounts here after we generate a Solana Pay URL */}
                 <div id="qr-code-container" className="my-4 text-white"></div>
 
                 {/* Button to Generate QR Code */}
