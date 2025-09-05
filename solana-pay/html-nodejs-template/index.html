@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Pay Demo</title>
+    <!-- Main stylesheet for the application -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main container for the entire application -->
+    <div class="container">
+        <!-- Header section with title and description -->
+        <header>
+            <h1>🚀 Solana Pay Demo</h1>
+            <p>Simple payment integration with Solana</p>
+        </header>
+
+        <!-- Main content area with payment form and information -->
+        <main>
+            <!-- Payment form card - contains the QR code generation interface -->
+            <div class="payment-card">
+                <h2>Make a Payment</h2>
+                
+                <!-- Amount input field -->
+                <div class="form-group">
+                    <label for="amount">Amount (SOL):</label>
+                    <input type="number" id="amount" value="0.1" min="0.001" step="0.001">
+                </div>
+
+                <!-- Recipient address input field -->
+                <div class="form-group">
+                    <label for="recipient">Recipient Address:</label>
+                    <input type="text" id="recipient" placeholder="Enter Solana wallet address">
+                </div>
+
+                <!-- Optional memo input field -->
+                <div class="form-group">
+                    <label for="memo">Memo (optional):</label>
+                    <input type="text" id="memo" placeholder="Payment memo">
+                </div>
+
+                <!-- QR code generation button -->
+                <button id="generateQR" class="qr-button">
+                    📱 Generate QR Code
+                </button>
+
+                <!-- QR code display container (hidden by default) -->
+                <div id="qrCode" class="qr-container" style="display: none;">
+                    <h3>Scan with Mobile Wallet</h3>
+                    <!-- Container for the generated QR code image -->
+                    <div id="qrCodeImage"></div>
+                    <!-- Display the Solana Pay URL for debugging/copying -->
+                    <p id="qrUrl" class="qr-url"></p>
+                </div>
+
+                <!-- Status message display area -->
+                <div id="status" class="status"></div>
+            </div>
+
+            <!-- Information card with instructions and wallet compatibility -->
+            <div class="info-card">
+                <h3>How it works</h3>
+                <ul>
+                    <li>Enter the amount you want to send</li>
+                    <li>Provide the recipient's Solana wallet address</li>
+                    <li>Click "Pay with Solana" to initiate the transaction</li>
+                    <li>Your wallet will prompt you to approve the payment</li>
+                </ul>
+                
+                <!-- Wallet compatibility information -->
+                <div class="wallet-info">
+                    <h4>Supported Wallets</h4>
+                    <p>This demo works with any Solana wallet that supports Solana Pay, including:</p>
+                    <ul>
+                        <li>Phantom</li>
+                        <li>Solflare</li>
+                        <li>Backpack</li>
+                        <li>Slope</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript dependencies and application code -->
+    <!-- Solana Web3.js library for blockchain interaction -->
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <!-- Solana Pay library for payment URL encoding -->
+    <script src="https://unpkg.com/@solana/pay@latest/lib/index.iife.min.js"></script>
+    <!-- BigNumber.js for precise decimal arithmetic -->
+    <script src="https://cdn.jsdelivr.net/npm/bignumber.js@9.1.2/bignumber.min.js"></script>
+    <!-- Main application JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
