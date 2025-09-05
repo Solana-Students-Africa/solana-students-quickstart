@@ -2,6 +2,10 @@
 
 A simple HTML project that generates Solana Pay QR codes for cryptocurrency payments. Users can scan the QR codes with their mobile wallets to complete payments.
 
+## Live Demo
+
+- Live site: [vanilla-js-solana-pay-scafford.vercel.app](https://vanilla-js-solana-pay-scafford.vercel.app/)
+
 ## Features
 
 - 🚀 **QR Code Generation**: Generate Solana Pay QR codes instantly
